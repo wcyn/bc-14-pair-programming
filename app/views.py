@@ -29,7 +29,8 @@ def load_user():
             session['username'] = None
             session['idToken'] = None
     except KeyError as e:
-        return redirect(url_for('log_in'))
+        pass
+        # return redirect(url_for('log_in'))
 
 @app.before_request
 def make_session_permanent():
@@ -47,6 +48,16 @@ def about():
 
 @app.route('/new-session')
 def new_session():
+    try:
+        if not session['logged_in']:
+            next_url = {'next': request.url}
+            print(next_url)
+            return redirect(url_for('log_in'))
+        else:
+            print("Refreshing token..")
+            user = auth.refresh(session['refreshToken'])
+    except KeyError as e:
+        pass
     return render_template("pair-session.html")
 
 
@@ -67,6 +78,7 @@ def sign_up():
 
                 session['username'] = username
                 session['idToken'] = user['idToken']
+                session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # flash('You were logged in')
                 return redirect(url_for('new_session'))
@@ -85,7 +97,21 @@ def sign_up():
 @app.route('/log-in', methods=['GET','POST'])
 def log_in():
     # with app.app_context():
+        try:
+            if session['logged_in']:
+                print("\t** Logged in!")
+                return redirect(url_for('new_session'))
+            else:
+                print("\t** Not Logged in!")
+        except KeyError as e:
+            print("\t** Session not available!")
+            pass
         error = None
+        # replace dot(.) with hash(#) since server doesn't receive post
+        # hash string
+        next_url = request.args.get('next')
+        print("Next URL: ", next_url)
+        # print("Args: ", request.args)
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
@@ -99,10 +125,12 @@ def log_in():
                 # g.user['logged_in'] = True
                 session['username'] = username
                 session['idToken'] = user['idToken']
+                session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # print(username.val().get('username'))
-                next_url = request.args.get('next')
+
                 if next_url:
+                    next_url = next_url.replace('.','#')
                     return redirect(next_url)
                 return redirect(url_for('new_session'))
 
@@ -129,6 +157,7 @@ def log_out():
             # g.user['logged_in'] = False
             session.pop('username', None)
             session.pop('idToken', None)
+            session.pop('refreshToken', None)
             session['logged_in'] = False
             return redirect(url_for('index'))
             # print(user)
