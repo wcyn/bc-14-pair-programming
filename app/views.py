@@ -36,6 +36,33 @@ def sign_up():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        username = request.form['username']
+        data = {
+            'username':username
+        }
+        try:
+            user = auth.create_user_with_email_and_password(email, password)
+            db.child("users").child(user.get('localId')).set(data, user['idToken'])
+            flash('You were logged in')
+            return redirect(url_for('new_session'))
+            # print(user)
+        except requests.exceptions.HTTPError as e:
+            print("HTTP Error: ", e)
+            error = 'Invalid field values'
+        except Exception as e:
+            error = "Something went wrong: " + str(type(e))
+            print(error)
+            print("Error: ", e)
+        # user = auth.sign_in_with_email_and_password(email, password)
+
+    return render_template("sign-up.html", error=error)
+
+@app.route('/log-in', methods=['GET','POST'])
+def log_in():
+    error = None
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
         try:
             user = auth.sign_in_with_email_and_password(email, password)
             flash('You were logged in')
@@ -50,6 +77,6 @@ def sign_up():
             print("Error: ", e)
         # user = auth.sign_in_with_email_and_password(email, password)
 
-    return render_template("sign-up.html", error=error)
+    return render_template("log-in.html", error=error)
 
 

@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Sign Up{% endblock %}
+{% block title %}Log In{% endblock %}
 {% block body %}
 <div class="jumbotron">
-  <h1>Sign Up</h1>
-  <p class="lead">Sign Up to Pair Program!</p>
-  <form action="{{ url_for('sign_up') }}" method=post>
-    <input type="text" name="username" placeholder="Your username"/>
+  <h1>Log In</h1>
+  <p class="lead">Log In to Pair Program!</p>
+  <form action="{{ url_for('log_in') }}" method=post>
     <input type="text" name="email" placeholder="Your email"/>
     <input type="password" name="password" placeholder="Password"/>
     <input type="submit" value="Submit"/>

@@ -1,5 +1,8 @@
 import pyrebase
-import urllib.request
+import requests
+import json
+import inspect
+
 
 config = {
 	"apiKey": "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
@@ -15,16 +18,28 @@ db = firebase.database()
 auth = firebase.auth()
 
 def main():
-    email = "wasonga.cynthia@yahoo.in"
-    password = "1234567"
+    email = "wasonga.cynthia@mail.mail"
+    password = "12345678"
     # auth.create_user_with_email_and_password(email, password)
 
-
     try:
-        user = auth.sign_in_with_email_and_password(email, password)
-        print(user)
-    except urllib.error.HTTPError as e:
+        # user = auth.sign_in_with_email_and_password(email, password)
+        data = {
+            'username': 'maria'
+        }
+        # all_users =
+        user = auth.create_user_with_email_and_password(email, password)
+        results = db.child("users").child(user.get('localId')).set(data, user['idToken'])
+        # print(auth.__dict__)
+        # print(type(auth.__dict__))
+        # print(auth.__dict__.get('current_user'))
+    except requests.exceptions.HTTPError as e:
         print("HTTP Error: ", e)
+        # obj = json.loads(str(e))
+        # print(obj)
+        # print(inspect.getmembers(requests.exceptions.HTTPError))
+        print(e.__weakref__)
+        # print(e.response.status_code)
     except Exception as e:
         print("Something went wrong")
         print("Error: ", e)
