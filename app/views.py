@@ -1,5 +1,6 @@
 from flask import render_template, request, flash, url_for, redirect
 from app import app
+import requests
 import pyrebase
 
 config = {
@@ -35,12 +36,19 @@ def sign_up():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = auth.sign_in_with_email_and_password(email, password)
-        flash('You were logged in')
-        return redirect(url_for('new_session'))
-        pass
-    else:
-        error = 'Invalid credentials'
+        try:
+            user = auth.sign_in_with_email_and_password(email, password)
+            flash('You were logged in')
+            return redirect(url_for('new_session'))
+            # print(user)
+        except requests.exceptions.HTTPError as e:
+            print("HTTP Error: ", e)
+            error = 'Invalid credentials'
+        except Exception as e:
+            error = "Something went wrong: " + str(type(e))
+            print(error)
+            print("Error: ", e)
+        # user = auth.sign_in_with_email_and_password(email, password)
 
     return render_template("sign-up.html", error=error)
 
