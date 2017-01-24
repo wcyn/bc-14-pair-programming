@@ -16,20 +16,21 @@
           <ul class="nav nav-pills pull-right">
             <li role="presentation"><a href="/">Home</a></li>
             <li role="presentation"><a href="/about">About</a></li>
-            <div>Global user:  {{ session['username'] }}</div>
-            <div>Session Logged in: {{ session.logged_in }}</div>
+            <!--<div>Global user:  {{ session['username'] }}</div>-->
+            <!--<div>Session Logged in: {{ session.logged_in }}</div>-->
             {% if not session.logged_in %}
               <li role="presentation"><a href="{{ url_for('log_in') }}">Log In</a></li>
               <li role="presentation"><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
             {% else %}
               <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
+              <li role="presentation"><a href="#">Hello <strong>{{ session['username'] }}</strong></a></li>
             {% endif %}
 
 
           </ul>
         </nav>
       </div>
-      <div>Something about auth: {{ g.auth }}</div>
+      <!--<div>Something about auth: {{ g.auth }}</div>-->
       {% block body %}
       {% endblock %}
       <footer class="footer">

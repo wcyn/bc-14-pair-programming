@@ -1,8 +1,14 @@
 from flask import render_template, request, flash, url_for, redirect, session
-from app import app
-import requests
-import pyrebase
+from firebase_token_generator import create_token
 from datetime import timedelta
+from app import app
+import calendar
+import pyrebase
+import requests
+# import environ
+import time
+
+# env = environ.Env()
 
 config = {
 	"apiKey": "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
@@ -21,13 +27,27 @@ with app.app_context():
     auth = firebase.auth()
 
 
+def generate_user_token(user_details):
+    auth_payload = {
+                    "uid": str(user_details.get("idToken")),
+                    "username": str(user_details.get("username"))
+                    }
+    options = {"admin": user_details.get("is_superuser"),
+              "expires": calendar.timegm(time.gmtime()) + 31556926
+    }
+    # Please deal with this expiry before 2nd August 2017
+    token = create_token("G1D2ESxShLxspLWJ6lDcgCu1UKzP2sjNso4uN3En",
+            auth_payload, options)
+    return token
+
+
 
 @app.before_request
 def load_user():
     try:
         if not session['logged_in']:
             session['username'] = None
-            session['idToken'] = None
+            session['localId'] = None
     except KeyError as e:
         pass
         # return redirect(url_for('log_in'))
@@ -50,13 +70,22 @@ def about():
 def new_session():
     try:
         if not session['logged_in']:
+            print("** @session not logged in ")
             next_url = {'next': request.url}
             print(next_url)
+            session.pop('cust_token', None)
             return redirect(url_for('log_in'))
         else:
+            user_details = {
+                "localId": session["localId"],
+                "username": session['username']
+            }
+            session['cust_token'] = generate_user_token(user_details)
+            print("** Cust Token: ",session['cust_token'])
             print("Refreshing token..")
             user = auth.refresh(session['refreshToken'])
     except KeyError as e:
+        print("Key Error: ",e)
         pass
     return render_template("pair-session.html")
 
@@ -77,7 +106,7 @@ def sign_up():
                 db.child("users").child(user.get('localId')).set(data, user['idToken'])
 
                 session['username'] = username
-                session['idToken'] = user['idToken']
+                session['localId'] = user['localId']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # flash('You were logged in')
@@ -121,10 +150,10 @@ def log_in():
                 username = db.child("users").child(user['localId']).get(
                     user['idToken']).val().get('username')
                 # g.user['username'] = username
-                # g.user['idToken'] = user['idToken']
+                # g.user['idToken'] = user['localId']
                 # g.user['logged_in'] = True
                 session['username'] = username
-                session['idToken'] = user['idToken']
+                session['localId'] = user['localId']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # print(username.val().get('username'))

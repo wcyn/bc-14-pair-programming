@@ -9,7 +9,9 @@
       <input type="text" name="email" placeholder="Your email"/>
       <input type="password" name="password" placeholder="Password"/>
       <input type="submit" value="Submit"/>
-      <div>{{ error }}</div>
+      {% if error %}
+        <div>{{ error }}</div>
+      {% endif %}
     </form>
   {% else %}
     <div>You are already Logged in</div>
