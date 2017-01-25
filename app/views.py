@@ -34,6 +34,9 @@ auth = firebase.auth()
 # Get environment variables
 # Firebase service account's email address and private key
 service_account_email = str(os.environ['FBASE_SERVICE_ACC_EMAIL'])
+
+# NOTE: The Private Key Env Variable has dots (.) in place of new line
+# in order to allow splitting of the various elements of the key
 pv_key = str(os.environ['FBASE_PRIVATE_KEY'])
 
 pv_k_holder = ''

@@ -49,10 +49,26 @@ export FLASK_APP=run.py
 ## Running on c9.io (Cloud 9)
 If running on c9.io.  Use this as the run command in the run.py file so flask can run
 on the c9 directory.
-Remeber to `import os`, the in-buil;t Python os module.
+Remember to `import os`, the in-buil;t Python os module.
 ```
 app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
 ```
+
+## Deploying to Heroku
+
+In order to deploy this application, you can have a look at the docs on how to
+do so from the (Heroku Site)[https://devcenter.heroku.com/articles/getting-started-with-python#introduction]
+
+### Setting up config vars for a deployed application
+Remember to set up your environment variables on Heroku.
+You can do so by typing this in the command line:
+
+```
+$ heroku config:set MY_VAR=somevarvalue
+```
+
+You can check out more Heroku environment commands from this
+(Heroku Web Page)[https://devcenter.heroku.com/articles/config-vars]
 
 ## NOTES
 You may find these helpful when setting up firebase authentication
@@ -76,7 +92,7 @@ RSA.load_key('path/to/server_key.pem').save_pub_key('path/to/server_key.pub')
 From the command line, run:
 
 ```
-ssh-keygen -f my_public_key.pub -i -m PKCS8
+$ ssh-keygen -f my_public_key.pub -i -m PKCS8
 ```
 This will output a public key in the the ssh-rsa format, which you can then
 store as an environment variable
