@@ -19,7 +19,6 @@ config = {
     "authDomain": "psqair.firebaseapp.com",
     "databaseURL": "https://psqair.firebaseio.com",
     "storageBucket": "psqair.appspot.com",
-    "serviceAccount": app.root_path + "/psqair-0859261d17af.json",
     "messagingSenderId": "470726324781"
 
 }
@@ -80,6 +79,32 @@ def index():
 def about():
     return render_template("about.html")
 
+@app.route('/api/user_token')
+def get_user_token():
+    next_url = {'next': request.url}
+    try:
+        if not session['logged_in']:
+            print("** @session not logged in ")
+            print(next_url)
+            session.pop('cust_token', None)
+            return None
+        else:
+            try:
+                cust_token = create_custom_token(session["localId"], False)
+                return jsonify({"token": cust_token})
+            except Exception as e:
+                print("Something went wrong: ", e)
+                return None
+
+            # print("Refreshing token..")
+            # user = auth.refresh(session['refreshToken'])
+            # session['cust_token'] = create_custom_token(session["localId"], False)
+            # print("** Cust Token: ", session['cust_token'])
+    except KeyError as e:
+        print("Key Error: ", e)
+        return None
+
+
 
 @app.route('/new-session')
 def new_session():
@@ -98,8 +123,6 @@ def new_session():
             }
             # print("Refreshing token..")
             # user = auth.refresh(session['refreshToken'])
-            # session['cust_token'] = create_custom_token(session["localId"], False)
-            print("** Cust Token: ", session['cust_token'])
     except KeyError as e:
         print("Key Error: ",e)
         return redirect(url_for('log_in'))
