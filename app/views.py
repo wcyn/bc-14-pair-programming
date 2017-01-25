@@ -10,6 +10,7 @@ import requests
 import python_jwt as jwt  # Requires: pip install python-jwt
 import Crypto.PublicKey.RSA as RSA  # Requires: pip install pycrypto
 import datetime
+import json
 
 
 # env = environ.Env()
@@ -32,10 +33,14 @@ with app.app_context():
     auth = firebase.auth()
 
 
+with open(app.root_path + '/../../psqair-0859261d17af.json') as data_file:
+    data = json.load(data_file)
+    private_key = RSA.importKey(data["private_key"])
+    # cert
+    # print(data["private_key"])
 
 # Get your service account's email address and private key from the JSON key file
 service_account_email = "psquair@psqair.iam.gserviceaccount.com"
-private_key = RSA.importKey("-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDO9ywu06l5Ts+l\nQVT6RxRLbD3afjX0yhLtf8P9N3PMm4EnE8zbYs1PAqaZ4BsY1PbyPn1iRpAuwg/C\nRK9rCKQMI4dKCqdeIUyF3w8X381wdn7lq+xgNK14WKCvO+e94/gR6wA22qhnTfqE\n9bnAdAERaHv3+13FD59ZL0QtyYAWs4Dyae1mJVvzJ9N+zwG3WtRGnRPdDm5oQCoo\nqas8+hYuVAO4UhW6o6ifo2jj/mRPXtIafiHzYqSvLxMG4sz/Ak6jDLDSG2AArLR/\nuUtKmZuSJFtelXmIX7JsYqoOLW1uLRmSlIm+VlWaPx6X3BjZizOsK4PtNog5q3uw\nSh3l29iFAgMBAAECggEAc3We12zLYdpeqtF8p7cZkk4LX6YDUdGdp5MccloKJv4l\nmfhI06cV5FsVOEi2tS6xqUjFSBsXeo5WnkkVF4AVjJQReHPjFPc8qn5a/DWldXUV\nq+kykCUzFS1UTw37ZYsVLGHOl8t6IU92T9CJ1Nyib+S7LAe2MyZY/jcJMQX1iDOQ\nvZ0I0LNXvu2Y9H2SOSRc02J7YTM2S0kEK5WRBP420KWTqbE2QS5qXD4KcZzhvXt4\nYuw7mwBMkSmpxZu1kOCJpxzA4cxa9h4i+WB27ernLMDXAN810RaeYqa11wLG1dvj\n+Au65K27TLcIzZMECKk8w1pwuoSxuKvaC8TO3LcE4QKBgQDxstDYV+TfTpKytTpG\n345G6apJgPa1AUrY0oaw2M9D2oqBrb48f+zPNaffBEQe7U2v8LgO3ySK5ry85JyJ\n1Ts3e10WITEFVyBzF4WMUBbAJ7gzQeCaFmXOknIodL5f9Q1fsknUmT0pkW4YrcSV\n14hXCXaf+gHfBRdFAcWzX50+iQKBgQDbNjsa/sbBCViKZd5tiTKQhAgJQspSGSZg\npUg0Fz+q+h+zTGlDRZc14LSjd/oMu//E+InRkuGg3L5p4nY+7gzI3HQi53A2h1ep\nsPFboa2RkWxq3wZCXD7yiiTgs9HsAZLh0q6bArbSdjaeUpdF3mIUO/qYQHEX8HzO\n0uEwKoTrHQKBgDzyiHNlhpNA7wEdbfqdOPVsysIKQSvXjZYrUEecBHfpze9xbn03\nDPIbZ593Je5ejK6HFwK5Bi/4izNeupKPMIWHGCwSZpggJlCfZ8/AClyeJ3bVb9ur\nNjTm/N5ywebUlnDBNpjjo2auA4M5nk7isMCx5DXnBz3DvOBr1/ypaa9xAoGBAKGE\nM8iQMKHK4RIYPOs4S6lvnvwz2h7jqQNMxQacmqy/3tudUXHftKpeBrrri7IWUz4u\nYl2oe9aqzyH1WmrDu2fEB04weN20m0LMvQlm9xxqqheUfGgoz7ilUMa/t8zM3AzH\nzx8nwM0RjOzardstH9cI2nuT/8BD0bISbxmuOoGBAoGBAIk/0Hm+hJBsiqgo1+Yw\nipLw0Bwup8IB/Bb0wnKfAlM1nlDIMkG43sgb0N287wfLvEak5s96nzysEI+yf8E8\nqvlKzzibgSe6prFTm39x5t82k+TZbAE1XeDww89dmqvKU+LqNlT0kglNzFnfhBHs\n+Zrkp2s056rK6qOyyVjIVMpt\n-----END PRIVATE KEY-----\n")
 
 def create_custom_token(uid, is_premium_account):
     try:
@@ -90,12 +95,29 @@ def get_user_token():
             return None
         else:
             try:
-                cust_token = create_custom_token(session["localId"], False)
-                data = {
-                    'jwt_token': cust_token
-                }
 
-                db.child("users").child(session['localId']).update(data, session['idToken'])
+                user_token = db.child("users").child(session["localId"]).child(
+                    'jwt_token').get(session['idToken'])
+                t_verified = python_jwt.verify_jwt(user_token)
+                # If token already exists and is verified i.e not expired
+                if user_token:
+                    try:
+                        f = open(app.root_path + '/../../mykey.pub','r')
+                        pub_key = RSA.importKey(f.read())
+                        t_verified = jwt.verify_jwt(str(user_token.val()), pub_key, ['RS256'])
+                    except Exception as e:
+                        print("Token verification: ", e)
+                        print("Creating new token...")
+                        cust_token = create_custom_token(session["localId"], False)
+                        data = {
+                            'jwt_token': cust_token
+                        }
+                        db.child("users").child(session['localId']).update(
+                            data, session['idToken'])
+
+                else:
+                    cust_token = user_token
+
                 return jsonify({"token": cust_token})
             except Exception as e:
                 print("Something went wrong while getting token: ", e)
