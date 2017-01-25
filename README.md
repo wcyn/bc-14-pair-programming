@@ -59,7 +59,7 @@ app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
 ### Generating a public key from Firebase private key
 - First, install (M2Crypto)[https://pypi.python.org/pypi/M2Crypto] (A Python crypto and SSL toolkit)
 ```
-$ sudp apt-get install python-m2crypto
+$ sudo apt-get install python-m2crypto
 ```
 
 Then run the following code using Python2
