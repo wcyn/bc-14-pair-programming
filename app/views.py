@@ -95,16 +95,16 @@ def get_user_token():
             return None
         else:
             try:
-
                 user_token = db.child("users").child(session["localId"]).child(
                     'jwt_token').get(session['idToken'])
-                t_verified = python_jwt.verify_jwt(user_token)
+                cust_token = user_token.val()
                 # If token already exists and is verified i.e not expired
                 if user_token:
                     try:
                         f = open(app.root_path + '/../../mykey.pub','r')
                         pub_key = RSA.importKey(f.read())
                         t_verified = jwt.verify_jwt(str(user_token.val()), pub_key, ['RS256'])
+                        cust_token = user_token.val()
                     except Exception as e:
                         print("Token verification: ", e)
                         print("Creating new token...")
@@ -114,9 +114,6 @@ def get_user_token():
                         }
                         db.child("users").child(session['localId']).update(
                             data, session['idToken'])
-
-                else:
-                    cust_token = user_token
 
                 return jsonify({"token": cust_token})
             except Exception as e:
@@ -130,7 +127,8 @@ def get_user_token():
     except KeyError as e:
         print("Key Error while getting token: ", e)
         return None
-
+    except Exception as e:
+        print("Something went wrong in get token: ", e)
 
 
 @app.route('/pair-session')

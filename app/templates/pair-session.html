@@ -16,11 +16,27 @@
     <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
     <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
     <!-- Custom js and css -->
-    <script src="{{url_for('static', filename='pair-session.js')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />
+    <!--<script src="{{url_for('static', filename='pair-session.js')}}"></script>-->
+    <script src="/static/pair-session.js?q=20"></script>
+    <!--<link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />-->
+    <link rel="stylesheet" href="/static/left-sidebar.css?q=20" type="text/css" />
+    <link rel="stylesheet" href="/static/pair-session.css?q=20" type="text/css" />
 </head>
 
 <body onload="init()">
+	<aside class="sidebar-left">
+
+		<a class="company-logo" href="#">Psquair</a>
+
+		<div class="sidebar-users">
+			<div class="user-presence"><i class="fa fa-picture-o"></i>User1</div>
+			<div class="user-presence"><i class="fa fa-heart-o"></i>User2</div>
+			<div class="user-presence"><i class="fa fa-keyboard-o"></i>User 3</div>
+			<div class="user-presence"><i class="fa fa-map-marker"></i>User 4</div>
+		</div>
+
+	</aside>
+
     <div id="firepad-container"></div>
 </body>
 
