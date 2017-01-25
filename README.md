@@ -55,6 +55,7 @@ app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
 ```
 
 ## NOTES
+You may find these helpful when setting up firebase authentication
 
 ### Generating a public key from Firebase private key
 - First, install (M2Crypto)[https://pypi.python.org/pypi/M2Crypto] (A Python crypto and SSL toolkit)
@@ -70,3 +71,12 @@ Then run the following code using Python2
 from M2Crypto import RSA
 RSA.load_key('path/to/server_key.pem').save_pub_key('path/to/server_key.pub')
 ```
+
+### Generating SSH public key from `.pub` RSA Public Key format
+From the command line, run:
+
+```
+ssh-keygen -f my_public_key.pub -i -m PKCS8
+```
+This will output a public key in the the ssh-rsa format, which you can then
+store as an environment variable
