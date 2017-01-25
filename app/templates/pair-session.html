@@ -4,6 +4,9 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <!-- JQueury -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
@@ -17,14 +20,14 @@
   <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
 
   <style>
-    html { height: 100%; }
-    body { margin: 0; height: 100%; position: relative; }
-    /* Height / width / positioning can be customized for your use case.
-       For demo purposes, we make firepad fill the entire browser. */
-    #firepad-container {
-      width: 100%;
-      height: 100%;
-    }
+	html { height: 100%; }
+	body { margin: 0; height: 100%; position: relative; }
+	/* Height / width / positioning can be customized for your use case.
+	   For demo purposes, we make firepad fill the entire browser. */
+	#firepad-container {
+	  width: 100%;
+	  height: 100%;
+	}
   </style>
 </head>
 
@@ -32,43 +35,60 @@
   <div id="firepad-container"></div>
 
   <script>
-    function init() {
-      //// Initialize Firebase.
-      //// TODO: replace with your Firebase project configuration.
 
-      var config = {
-        apiKey: "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
-        authDomain: "psqair.firebaseapp.com",
-        databaseURL: "https://psqair.firebaseio.com"
-      };
-      firebase.initializeApp(config);
-      //// Get Firebase Database reference.
-      var firepadRef = getExampleRef();
-      //// Create CodeMirror (with line numbers and the JavaScript mode).
-      var codeMirror = CodeMirror(document.getElementById('firepad-container'), {
-        lineNumbers: true,
-        mode: 'javascript'
-      });
-      //// Create Firepad.
-      var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-        defaultText: '// JavaScript Editing with Firepad!\nfunction go() {\n  var message = "Hello, world.";\n  console.log(message);\n}'
-      });
-    }
-    // Helper to get hash from end of URL or generate a random one.
-    function getExampleRef() {
-      var ref = firebase.database().ref();
-      var hash = window.location.hash.replace(/#/g, '');
-      if (hash) {
-        ref = ref.child(hash);
-      } else {
-        ref = ref.push(); // generate unique location.
-        window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
-      }
-      if (typeof console !== 'undefined') {
-        console.log('Firebase data: ', ref.toString());
-      }
-      return ref;
-    }
+	function init() {
+	  //// Initialize Firebase.
+	  //// TODO: replace with your Firebase project configuration.
+
+	  var config = {
+		apiKey: "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
+		authDomain: "psqair.firebaseapp.com",
+		databaseURL: "https://psqair.firebaseio.com"
+	  };
+	  var cust_token = "eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiJ9.eyJpc3MiOiAicHNxdWFpckBwc3FhaXIuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiZXhwIjogMTQ4NTMzMjAyNywgInN1YiI6ICJwc3F1YWlyQHBzcWFpci5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsICJqdGkiOiAiWkpJRHhEX3lvcVJkMWtHdUlQWVBfQT09IiwgInVpZCI6ICJsVlF3QUlaS1duUU9FWGY4aUpBaDRwY2x5OGQyIiwgIm5iZiI6IDE0ODUzMjg0MjcsICJjbGFpbXMiOiB7InByZW1pdW1fYWNjb3VudCI6IGZhbHNlfSwgImlhdCI6IDE0ODUzMjg0MjcsICJhdWQiOiAiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQifQ.omP81IuSSq4roZUWGgZwvC7BQKaCcHgJzmY3yFPpVUQBj7RraH8BJe48vUTDa2lOJrLDpMauA52B6URFinLD3Hrp4PjOkW0JTfSAVPj0itmTXjtUpHYH6Y0Y1UIntZJ_Tx-pAGe1S61py9ZlSVQwNCuiTqY9NU_dK8iifKeYIoA4aR0vMw6qo5dV1dKUEMhzojkl9Lt-WCxwZW_57yrFp3q4xAFWTprQ0eO2GRUR5nmHPn7f3Wiigtoj_r7anjFCXL-OvbauKqqqU0DdaTQRi-b7ncjkmnyBdms1vUbbctn7qJhh6YQFO5_bQeHiaDJabfewRqpn_tA4TyfWmJxUxg"
+	  console.log("Cust token: " + cust_token)
+	  firebase.initializeApp(config);
+	  //// Get Firebase Database reference.
+	  var firepadRef = getExampleRef();
+	  //// Create CodeMirror (with line numbers and the JavaScript mode).
+	  var codeMirror = CodeMirror(document.getElementById('firepad-container'), {
+		lineNumbers: true,
+		mode: 'javascript'
+	  });
+	  firebase.auth().signInWithCustomToken(cust_token).then(function(data) {
+		// Authentication successful.
+		console.log("Authentication successful!");
+		console.log("Data: " + JSON.stringify(data));
+
+	  }, function(error) {
+		var errorCode = error.code;
+		var errorMessage = error.message;
+		console.log(error)
+	  });
+	  var user = firebase.auth().currentUser;
+	  console.log("User: " + user)
+	  //// Create Firepad.
+	  var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+		defaultText: '// JavaScript Editing with Firepad!\nfunction go() {\n  var message = "Hello, world.";\n  console.log(message);\n}'
+	  });
+	}
+	// Helper to get hash from end of URL or generate a random one.
+	function getExampleRef() {
+	  var ref = firebase.database().ref();
+	  var hash = window.location.hash.replace(/#/g, '');
+	  if (hash) {
+		ref = ref.child(hash);
+	  } else {
+		ref = ref.push(); // generate unique location.
+		window.location = window.location + '#' + ref.key; // add it as a hash to the URL.
+	  }
+	  if (typeof console !== 'undefined') {
+		console.log('Firebase data: ', ref.toString());
+	  }
+	  return ref;
+	}
+
+
   </script>
 </body>
 </html>
