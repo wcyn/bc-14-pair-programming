@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block body %}
+<div class="jumbotron">
+  <h1>Sign Up</h1>
+  <p class="lead">Sign Up to Pair Program!</p>
+  <form action="{{ url_for('sign_up') }}" method=post>
+    <input type="text" name="username" placeholder="Your username"/>
+    <input type="text" name="email" placeholder="Your email"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="submit" value="Submit"/>
+    <div>{{ error }}</div>
+  </form>
+</div>
+{% endblock %}

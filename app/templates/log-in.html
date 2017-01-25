@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+<div class="jumbotron">
+    <h1>Log In</h1>
+    {% if not session.logged_in %}
+        <p class="lead">Log In to Pair Program!</p>
+        <form action="{{ url_for('log_in') }}" method=post>
+            <input type="text" name="email" placeholder="Your email" />
+            <input type="password" name="password" placeholder="Password" />
+            <input type="submit" value="Submit" />
+            {% if error %}
+                <div>{{ error }}</div>
+            {% endif %}
+        </form>
+    {% else %}
+        <div>You are already Logged in</div>
+        <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
+    {% endif %}
+</div>
+{% endblock %}
