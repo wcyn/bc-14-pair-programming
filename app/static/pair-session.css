@@ -1,0 +1,18 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    position: relative;
+}
+
+
+/* Height / width / positioning can be customized for your use case.
+   For demo purposes, we make firepad fill the entire browser. */
+
+#firepad-container {
+    width: 100%;
+    height: 100%;
+}

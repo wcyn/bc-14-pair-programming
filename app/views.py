@@ -91,9 +91,14 @@ def get_user_token():
         else:
             try:
                 cust_token = create_custom_token(session["localId"], False)
+                data = {
+                    'jwt_token': cust_token
+                }
+
+                db.child("users").child(session['localId']).update(data, session['idToken'])
                 return jsonify({"token": cust_token})
             except Exception as e:
-                print("Something went wrong: ", e)
+                print("Something went wrong while getting token: ", e)
                 return None
 
             # print("Refreshing token..")
@@ -101,13 +106,13 @@ def get_user_token():
             # session['cust_token'] = create_custom_token(session["localId"], False)
             # print("** Cust Token: ", session['cust_token'])
     except KeyError as e:
-        print("Key Error: ", e)
+        print("Key Error while getting token: ", e)
         return None
 
 
 
-@app.route('/new-session')
-def new_session():
+@app.route('/pair-session')
+def pair_session():
     try:
         if not session['logged_in']:
             print("** @session not logged in ")
@@ -147,16 +152,17 @@ def sign_up():
 
                 session['username'] = username
                 session['localId'] = user['localId']
+                session['idToken'] = user['idToken']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # flash('You were logged in')
-                return redirect(url_for('new_session'))
+                return redirect(url_for('pair_session'))
                 # print(user)
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid field values'
             except Exception as e:
-                error = "Something went wrong: " + str(type(e))
+                error = "Something went wrong while signing up: " + str(type(e))
                 print(error)
                 print("Error: ", e)
             # user = auth.sign_in_with_email_and_password(email, password)
@@ -169,7 +175,7 @@ def log_in():
         try:
             if session['logged_in']:
                 print("\t** Logged in!")
-                return redirect(url_for('new_session'))
+                return redirect(url_for('pair_session'))
             else:
                 print("\t** Not Logged in!")
         except KeyError as e:
@@ -194,6 +200,7 @@ def log_in():
                 # g.user['logged_in'] = True
                 session['username'] = username
                 session['localId'] = user['localId']
+                session['idToken'] = user['idToken']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
                 # print(username.val().get('username'))
@@ -201,16 +208,15 @@ def log_in():
                 if next_url:
                     next_url = next_url.replace('.','#')
                     return redirect(next_url)
-                return redirect(url_for('new_session'))
+                return redirect(url_for('pair_session'))
 
                 # print(user)
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid credentials'
             except Exception as e:
-                error = "Something went wrong: " + str(type(e))
-                print(error)
-                print("Error: ", e)
+                error = "Something went wrong while logging in: "
+                print(error + str(e))
             # user = auth.sign_in_with_email_and_password(email, password)
 
         return render_template("log-in.html", error=error)
@@ -225,6 +231,7 @@ def log_out():
             # g.user['idToken'] = None
             # g.user['logged_in'] = False
             session.pop('username', None)
+            session.pop('localId', None)
             session.pop('idToken', None)
             session.pop('refreshToken', None)
             session['logged_in'] = False
@@ -234,9 +241,8 @@ def log_out():
             print("HTTP Error: ", e)
             error = 'Could Not Log Out'
         except Exception as e:
-            error = "Something went wrong: " + str(type(e))
-            print(error)
-            print("Error: ", e)
+            error = "Something went wrong while logging out: "
+            print(error + str(e))
             # user = auth.sign_in_with_email_and_password(email, password)
 
 
