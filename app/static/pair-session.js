@@ -7,20 +7,18 @@ function init() {
         authDomain: "psqair.firebaseapp.com",
         databaseURL: "https://psqair.firebaseio.com"
     };
-    var firepad = null, codeMirror = null, userList = null;
-    if (firepad) {
-      // Clean up.
-      firepad.dispose();
-      userList.dispose();
-      $('.CodeMirror').remove();
-    }
+
+    // var firepad = null, codeMirror = null, userList = null;
+    // if (firepad) {
+    //   // Clean up.
+    //   firepad.dispose();
+    //   userList.dispose();
+    //   $('.CodeMirror').remove();
+    // }
     $(document).ready(function() {
         $.ajax({
             url: "/api/user_token"
         }).then(function(token_data) {
-            console.log("Data from API: " + JSON.stringify(token_data));
-            // var cust_token = data['token']
-            // console.log("Cust token: " + cust_token)
             firebase.initializeApp(config);
             //// Get Firebase Database reference.
             var firepadRef = getExampleRef();
@@ -32,18 +30,17 @@ function init() {
             var codeMirror = CodeMirror(document.getElementById('firepad-container'), {
                 lineNumbers: true,
                 lineWrapping: true,
-                mode: 'python'
+                mode:'python',
+                theme: "monokai",
+                indentWithTabs: true
             });
             firebase.auth().signInWithCustomToken(token_data['token']).then(function(data) {
                 // Authentication successful.
-                console.log("Authentication successful!");
-                console.log("Data: " + JSON.stringify(data));
                 user_details.uid = data['uid']
                 var userRef = firebase.database().ref('users/' + data['uid'] + '/username/');
                 var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
-                        defaultText: '# Welcome to Psquair: Start writing some Python Code',
-                        userId: data['uid'],
-                        richTextShortcuts: true
+                        defaultText: '# Welcome to Psquair: Start writing some Python Code\nprint("Hello World!")',
+                        userId: data['uid']
                     });
                 userRef.on('value', function(snapshot) {
                     //   updateStarCount(postElement, snapshot.val());
@@ -57,7 +54,6 @@ function init() {
                     $("#sidebar .sidebar-menu #current-user .u-name").text(username);
                     var userList = FirepadUserList.fromDiv(firepadRef.child('users'),
                     document.getElementById('firepad-userlist'), data['uid'], username);
-
                 });
 
             }, function(error) {
@@ -65,8 +61,7 @@ function init() {
                 var errorMessage = error.message;
                 console.log(error)
             });
-            // var user = firebase.auth().currentUser;
-            // console.log("User: " + user)
+
             codeMirror.focus();
         });
     });

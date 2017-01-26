@@ -1,0 +1,12 @@
+.hgignore
+node_modules
+
+# Python
+*.py[cod]
+.installed.cfg
+__pycache__
+pip-log.txt
+.coverage
+.tox
+nosetests.xml
+
