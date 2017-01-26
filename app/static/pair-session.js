@@ -1,4 +1,4 @@
-/* global firebase, Firepad, $, CodeMirror */
+/* global firebase, Firepad, $, CodeMirror, FirepadUserList */
 
 function init() {
     //// Initialize Firebase.
@@ -47,7 +47,7 @@ function init() {
                     });
                 userRef.on('value', function(snapshot) {
                     //   updateStarCount(postElement, snapshot.val());
-                    console.log("Snapshot strinified: " +
+                    console.log("Snapshot stringified: " +
                     String(snapshot.val()).charAt(0));
                     //   updateUIElement("aside #sidebar .sidebar-menu #current-user .name-initial"
                     //   ).text(snapshot.val())
@@ -55,11 +55,10 @@ function init() {
                     var init_char = username.charAt(0)
                     $("#sidebar .sidebar-menu #current-user .name-initial").text(init_char);
                     $("#sidebar .sidebar-menu #current-user .u-name").text(username);
+                    var userList = FirepadUserList.fromDiv(firepadRef.child('users'),
+                    document.getElementById('firepad-userlist'), data['uid'], username);
 
                 });
-                // data['uid']
-                var userList = FirepadUserList.fromDiv(firepadRef.child('users'),
-                document.getElementById('firepad-userlist'), data['uid']);
 
             }, function(error) {
                 var errorCode = error.code;

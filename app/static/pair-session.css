@@ -122,6 +122,21 @@ aside #sidebar .sidebar-menu #other-users {
     padding-left: 20px;
 }
 
+aside #sidebar .sidebar-menu #other-users .firepad-userlist-user{
+    height: 40px;
+    padding-top: 5px;
+    cursor: default;
+}
+
+aside #sidebar .sidebar-menu #other-users .firepad-userlist-color-indicator{
+    height: 30px;
+    width: 30px;
+    float: left;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
 
 /* Main Content */
 
