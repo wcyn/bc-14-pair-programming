@@ -148,17 +148,31 @@ function updateChatSpace(sessionId) {
         console.log("Chat snapshot new chats: " + snapshot.val()['message']);
         var chat_obj = snapshot.val();
         if (chat_obj) {
-        console.log("Updating chat space..: " + chat_obj);
-        $('#sidebar-chat .sidebar-chat-list').each(function(){
-            $('<li />', {
-                class : 'chat-msg',
-                text: chat_obj['message'],
-                appendTo : this
-            });
-        });
-    } else {
-        console.log("NO chat object")
-    }
+            console.log("Updating chat space..: " + chat_obj);
+            // $('#sidebar-chat .sidebar-chat-list').each(function(){
+            //     $('<li />', {
+            //         class : 'chat-msg',
+            //         text: chat_obj['message'],
+            //         appendTo : this
+            //     });
+            // });
+            $('<li class="chat-content">'
+                + '<div class="div-circle">'
+                + '@'
+                + '</div>'
+                + '<div class="msg-details">'
+                + '<div class="sender-name">'
+                + chat_obj['userId']
+                + '</div>'
+                + '<p class="chat-msg">'
+                + chat_obj['message']
+                + '</p>'
+                + '</div>'
+                + '</li>'
+            ).appendTo('#sidebar-chat .sidebar-chat-list');
+        } else {
+            console.log("NO chat object")
+        }
     });
 
 }
