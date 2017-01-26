@@ -115,6 +115,7 @@ aside #sidebar .sidebar-menu #current-user .name-initial {
     font-weight: 800;
     font-size: 35px;
     color: rgba(26, 19, 31, .90);
+    text-transform: uppercase;
 }
 
 aside #sidebar .sidebar-menu #other-users {

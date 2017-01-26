@@ -27,10 +27,17 @@ function init() {
                 // Authentication successful.
                 console.log("Authentication successful!");
                 console.log("Data: " + JSON.stringify(data));
-                var userRef = firebase.database().ref('users/' + data['uid']);
+                var userRef = firebase.database().ref('users/' + data['uid'] + '/username/');
                 userRef.on('value', function(snapshot) {
-                //   updateStarCount(postElement, snapshot.val());
-                  console.log(snapshot.val());
+                    //   updateStarCount(postElement, snapshot.val());
+                    console.log("Snapshot strinified: " +
+                    String(snapshot.val()).charAt(0));
+                    //   updateUIElement("aside #sidebar .sidebar-menu #current-user .name-initial"
+                    //   ).text(snapshot.val())
+                    var username = String(snapshot.val())
+                    var init_char = username.charAt(0)
+                    $("#sidebar .sidebar-menu #current-user .name-initial").text(init_char);
+                    $("#sidebar .sidebar-menu #current-user .u-name").text(username);
                 });
                 // data['uid']
 
@@ -65,4 +72,10 @@ function getExampleRef() {
         console.log('Firebase data: ', ref.toString());
     }
     return ref;
+}
+
+function updateUIElement(elem, data) {
+    console.log("Updating UI...");
+    $(elem).text(data);
+
 }
