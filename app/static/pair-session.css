@@ -118,6 +118,10 @@ aside #sidebar .sidebar-menu #current-user .name-initial {
     text-transform: uppercase;
 }
 
+aside #sidebar .sidebar-menu #current-user .u-name {
+    font-weight: bolder;
+}
+
 aside #sidebar .sidebar-menu #other-users {
     padding-left: 20px;
 }
@@ -192,8 +196,8 @@ aside #sidebar-chat {
     padding: 20px;
 }
 
-aside #sidebar-chat .sidebar-menu {
-    padding-left: 0;
+aside #sidebar-chat .sidebar-chat-list {
+    padding: 5px;
 }
 
 aside #sidebar-chat .title {

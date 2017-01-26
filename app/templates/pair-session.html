@@ -55,14 +55,14 @@
         <div id="sidebar" class="nav-collapse ">
             <!-- sidebar menu start-->
             <ul class="sidebar-menu" id="nav-accordion">
-              <div id="current-user">
-                <div class="div-circle">
-
-                <p class="name-initial">@</p></div>
-                <h5 class="centered u-name">Loading...</h5>
-              </div>
-              <div id="other-users">
-              	<div id="firepad-userlist"></div>
+                <div id="current-user">
+                    <div class="div-circle">
+                        <p class="name-initial">@</p>
+                    </div>
+                    <h5 class="centered u-name">Loading...</h5>
+                </div>
+                <div id="other-users">
+                    <div id="firepad-userlist"></div>
                 </div>
             </ul>
             <!-- sidebar menu end-->
@@ -74,7 +74,7 @@
         <section class="wrapper">
             <div class="row">
                 <div class="col-xs-12 main-chart">
-                  <div class="row" id="firepad-container"></div>
+                    <div class="row" id="firepad-container"></div>
                 </div>
                 <!-- /col-lg-9 END SECTION MIDDLE -->
             </div>
@@ -87,14 +87,21 @@
         <div id="sidebar-chat" class="nav-collapse ">
             <!-- sidebar chat menu-->
             <div class="title">Chats</div>
-            <ul class="sidebar-menu" id="nav-accordion">
+            <div id="chat-wrapper">
+	            <ul class="sidebar-chat-list" id="nav-accordion">
+	            </ul>
+	            <div id='chat-input'>
+	            	<form id="search_form" onsubmit="return false">
+					   <input type="text" name="chat-message" id="chat-field"/>
+					   <input type="button" id="send-chat-btn" value="Send"/>
+					</form>
+	            </div>
 
-            </ul>
+            </div>
             <!-- sidebar menu end-->
         </div>
     </aside>
     <!--sidebar end-->
-
 </body>
 
 </html>

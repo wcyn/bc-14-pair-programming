@@ -8,5 +8,7 @@ __pycache__
 pip-log.txt
 .coverage
 .tox
+test_auth.py
 nosetests.xml
+
 
