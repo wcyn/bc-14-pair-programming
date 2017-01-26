@@ -5,6 +5,7 @@ from app import app
 import calendar
 import pyrebase
 import requests
+import os
 # import environ
 # import time
 import python_jwt as jwt  # Requires: pip install python-jwt
@@ -24,24 +25,23 @@ config = {
 
 }
 
-print("INstance path: ", app.root_path)
 
-with app.app_context():
-    firebase = pyrebase.initialize_app(config)
-    db = firebase.database()
-    # auth = firebase.auth()
-    auth = firebase.auth()
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+# auth = firebase.auth()
+auth = firebase.auth()
+
+# Get environment variables
+# Firebase service account's email address and private key
+service_account_email = str(os.environ['FBASE_SERVICE_ACC_EMAIL'])
+pv_key = str(os.environ['FBASE_PRIVATE_KEY'])
+
+pv_k_holder = ''
+for i in pv_key.split('.'):
+    pv_k_holder+=i+'\n'
 
 
-with open(app.root_path + '/../../psqair-0859261d17af.json') as data_file:
-    data = json.load(data_file)
-    private_key = RSA.importKey(data["private_key"])
-    # cert
-    # print(data["private_key"])
-
-# Get your service account's email address and private key from the JSON key file
-service_account_email = "psquair@psqair.iam.gserviceaccount.com"
-
+private_key = RSA.importKey(pv_k_holder)
 def create_custom_token(uid, is_premium_account):
     try:
         payload = {
@@ -101,8 +101,9 @@ def get_user_token():
                 # If token already exists and is verified i.e not expired
                 if user_token:
                     try:
-                        f = open(app.root_path + '/../../mykey.pub','r')
-                        pub_key = RSA.importKey(f.read())
+                        # print("Public Key: ", os.environ['FBASE_PUBLIC_KEY'])
+                        # public key is in ssh-rsa format
+                        pub_key = RSA.importKey(str(os.environ['FBASE_PUBLIC_KEY']))
                         t_verified = jwt.verify_jwt(str(user_token.val()), pub_key, ['RS256'])
                         cust_token = user_token.val()
                     except Exception as e:
