@@ -27,6 +27,12 @@ function init() {
                 // Authentication successful.
                 console.log("Authentication successful!");
                 console.log("Data: " + JSON.stringify(data));
+                var userRef = firebase.database().ref('users/' + data['uid']);
+                userRef.on('value', function(snapshot) {
+                //   updateStarCount(postElement, snapshot.val());
+                  console.log(snapshot.val());
+                });
+                // data['uid']
 
             }, function(error) {
                 var errorCode = error.code;
