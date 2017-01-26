@@ -4,10 +4,15 @@
 
 <head>
     <meta charset="utf-8" />
-    <!-- JQueury -->
+    <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <!-- CodeMirror and its JavaScript mode file -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/javascript/javascript.js"></script>
@@ -15,29 +20,144 @@
     <!-- Firepad -->
     <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
     <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=BioRhyme:200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400" rel="stylesheet">
     <!-- Custom js and css -->
     <!--<script src="{{url_for('static', filename='pair-session.js')}}"></script>-->
-    <script src="/static/pair-session.js?q=20"></script>
+    <script src="static/pair-session.js?q=20"></script>
     <!--<link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />-->
-    <link rel="stylesheet" href="/static/left-sidebar.css?q=20" type="text/css" />
-    <link rel="stylesheet" href="/static/pair-session.css?q=20" type="text/css" />
+    <link rel="stylesheet" href="static/left-sidebar.css?q=20" type="text/css" />
+    <link rel="stylesheet" href="static/pair-session.css?q=20" type="text/css" />
 </head>
 
 <body onload="init()">
-	<aside class="sidebar-left">
+    <!--header start-->
+    <header class="header">
+        <div class="sidebar-toggle">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="/" class="logo"><b>Psquair</b></a>
+        <!--logo end-->
+        <div class="top-menu">
+            <ul class="nav pull-right">
+                <li><a class="logout" href="/sign-in">Logout</a></li>
+            </ul>
+        </div>
+    </header>
+    <!--header end-->
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+              <div id="current-user">
+                <div class="div-circle">
 
-		<a class="company-logo" href="#">Psquair</a>
+                <p class="name-initial">M</p></div>
+                <h5 class="centered">Marcel Newman</h5>
+              </div>
+              <div id="other-users">
+                <li class="mt">
+                    <a class="active" href="index.html">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-desktop"></i>
+                        <span>UI Elements</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="general.html">General</a></li>
+                        <li><a href="buttons.html">Buttons</a></li>
+                        <li><a href="panels.html">Panels</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-cogs"></i>
+                        <span>Components</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="calendar.html">Calendar</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="todo_list.html">Todo List</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-book"></i>
+                        <span>Extra Pages</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="blank.html">Blank Page</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="lock_screen.html">Lock Screen</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-tasks"></i>
+                        <span>Forms</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="form_component.html">Form Components</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class="fa fa-th"></i>
+                        <span>Data Tables</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="basic_table.html">Basic Table</a></li>
+                        <li><a href="responsive_table.html">Responsive Table</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu">
+                    <a href="javascript:;">
+                        <i class=" fa fa-bar-chart-o"></i>
+                        <span>Charts</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="morris.html">Morris</a></li>
+                        <li><a href="chartjs.html">Chartjs</a></li>
+                    </ul>
+                </li>
+                </div>
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row">
+                <div class="col-lg-9 main-chart">
+                  <div class="row" id="firepad-container"></div>
+                </div>
+                <!-- /col-lg-9 END SECTION MIDDLE -->
+            </div>
+            <! --/row -->
+        </section>
+    </section>
+    <!--main content end-->
+    <!--sidebar chat-->
+    <aside>
+        <div id="sidebar-chat" class="nav-collapse ">
+            <!-- sidebar chat menu-->
+            <div class="title">Chats</div>
+            <ul class="sidebar-menu" id="nav-accordion">
 
-		<div class="sidebar-users">
-			<div class="user-presence"><i class="fa fa-picture-o"></i>User1</div>
-			<div class="user-presence"><i class="fa fa-heart-o"></i>User2</div>
-			<div class="user-presence"><i class="fa fa-keyboard-o"></i>User 3</div>
-			<div class="user-presence"><i class="fa fa-map-marker"></i>User 4</div>
-		</div>
-
-	</aside>
-
-    <div id="firepad-container"></div>
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
 </body>
 
 </html>
