@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+<div onload="mySessionsInit()">
+    <!--header start-->
+    <header class="header">
+        <div class="sidebar-toggle">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="/" class="logo"><b>Psquair</b></a>
+        <!--logo end-->
+        <div class="top-menu">
+            <ul class="nav pull-right">
+                <li><a class="logout" href="{{ url_for('log_out') }}">Logout</a></li>
+            </ul>
+        </div>
+    </header>
+    <!--header end-->
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+                <div id="current-user">
+                    <div class="div-circle">
+                        <p class="name-initial">@</p>
+                    </div>
+                    <h5 class="centered u-name">Loading...</h5>
+                </div>
+                <div id="other-users">
+                    <div id="firepad-userlist"></div>
+                </div>
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row">
+                <div class="col-xs-12 main-chart">
+                    <div class="row" id="firepad-container"></div>
+                </div>
+                <!-- /col-lg-9 END SECTION MIDDLE -->
+            </div>
+            <! --/row -->
+        </section>
+    </section>
+    <!--main content end-->
+    <!--sidebar chat-->
+    <aside>
+        <div id="sidebar-chat" class="nav-collapse ">
+            <!-- sidebar chat menu-->
+            <div class="title">Chats</div>
+            <div id="chat-wrapper">
+	            <ul class="sidebar-chat-list" id="nav-accordion">
+	            </ul>
+            </div>
+            <div id='chat-input'>
+	            	<form id="chat-form" onsubmit="return false">
+					   <input type="text" placeholder="Type your message here.." name="chat-message" id="chat-field"/>
+					   <input type="button" visibility="false" id="send-chat-btn" value="Send"/>
+					</form>
+	            </div>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+</div>
+
+<div class="jumbotron">
+    <h1>Log In</h1>
+    {% if not session.logged_in %}
+        <p class="lead">Log In to Pair Program!</p>
+        <form action="{{ url_for('log_in') }}" method=post>
+            <input type="text" name="email" placeholder="Your email" />
+            <input type="password" name="password" placeholder="Password" />
+            <input type="submit" value="Submit" />
+            {% if error %}
+                <div>{{ error }}</div>
+            {% endif %}
+        </form>
+    {% else %}
+        <div>You are already Logged in</div>
+        <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
+    {% endif %}
+</div>
+{% endblock %}

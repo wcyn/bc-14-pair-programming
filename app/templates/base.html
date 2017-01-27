@@ -6,29 +6,60 @@
     <title>{% block title %}{% endblock %}</title>
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Firepad -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
+    <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=BioRhyme:200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <!-- Custom js and css -->
+    <script src="{{url_for('static', filename='my-sessions.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='my-sessions.css')}}" type="text/css" />
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}" type="text/css" />
+
 </head>
 
 <body>
     <div class="container">
-        <div class="header clearfix">
-            <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/">Home</a></li>
-                    <li role="presentation"><a href="/about">About</a></li>
+        <!--<div class="header clearfix">-->
+        <!--    <nav>-->
+        <!--        <ul class="nav nav-pills pull-right">-->
+        <!--            <li role="presentation"><a href="/">Home</a></li>-->
+        <!--            <li role="presentation"><a href="/about">About</a></li>-->
                     <!--<div>Global user:  {{ session['username'] }}</div>-->
                     <!--<div>Session Logged in: {{ session.logged_in }}</div>-->
-                    {% if not session.logged_in %}
-                    <li role="presentation"><a href="{{ url_for('log_in') }}">Log In</a></li>
-                    <li role="presentation"><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
-                    {% else %}
-                    <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
-                    <li role="presentation"><a href="#">Hello <strong>{{ session['username'] }}</strong></a></li>
-                    {% endif %}
-                </ul>
-            </nav>
+        <!--            {% if not session.logged_in %}-->
+        <!--            <li role="presentation"><a href="{{ url_for('log_in') }}">Log In</a></li>-->
+        <!--            <li role="presentation"><a href="{{ url_for('sign_up') }}">Sign Up</a></li>-->
+        <!--            {% else %}-->
+        <!--            <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>-->
+        <!--            <li role="presentation"><a href="#">Hello <strong>{{ session['username'] }}</strong></a></li>-->
+        <!--            {% endif %}-->
+        <!--        </ul>-->
+        <!--    </nav>-->
+        <!--</div>-->
+        <header class="header">
+        <div class="sidebar-toggle">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
         </div>
+        <!--logo start-->
+        <a href="/" class="logo"><b>Psquair</b></a>
+        <!--logo end-->
+        <div class="top-menu">
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation"><a class="nav-btn" href="/">Home</a></li>
+                {% if not session.logged_in %}
+                <li role="presentation"><a class="nav-btn" href="{{ url_for('log_in') }}">Log In</a></li>
+                <li role="presentation"><a class="nav-btn" href="{{ url_for('sign_up') }}">Sign Up</a></li>
+                {% else %}
+                <li><a class="nav-btn" href="{{ url_for('log_out') }}">Log Out</a></li>
+                <li role="presentation"><a href="#">Hello <strong>{{ session['username'] }}</strong></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
         <!--<div>Something about auth: {{ g.auth }}</div>-->
         {% block body %} {% endblock %}
         <footer class="footer">

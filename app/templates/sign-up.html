@@ -4,12 +4,41 @@
 <div class="jumbotron">
   <h1>Sign Up</h1>
   <p class="lead">Sign Up to Pair Program!</p>
-  <form action="{{ url_for('sign_up') }}" method=post>
-    <input type="text" name="username" placeholder="Your username"/>
-    <input type="text" name="email" placeholder="Your email"/>
-    <input type="password" name="password" placeholder="Password"/>
-    <input type="submit" value="Submit"/>
-    <div>{{ error }}</div>
-  </form>
+  <div class="form-cont">
+        <form action="{{ url_for('sign_up') }}" method=post data-toggle="validator" role="form">
+          <div class="form-group">
+            <label for="inputName" class="control-label">username</label>
+            <input type="text" class="form-control" id="inputName" name="username" placeholder="donald" required>
+          </div>
+          <div class="form-group">
+            <label for="inputEmail" class="control-label">Email</label>
+            <input type="email" class="form-control" id="inputEmail" placeholder="Email" name="email"  data-error="That email address is invalid" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword" class="control-label">Password</label>
+            <div class="form-inline row">
+              <div class="form-group col-sm-6">
+                <input type="password" name="password" data-minlength="6" class="form-control" id="inputPassword" placeholder="Password" required>
+                <div class="help-block">Minimum of 6 characters</div>
+              </div>
+              <div class="form-group col-sm-6">
+                <input type="password" class="form-control" id="inputPasswordConfirm" data-match="#inputPassword" data-match-error="Whoops, these don't match" placeholder="Confirm" required>
+                <div class="help-block with-errors"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+        </div>
+  <!--<form action="{{ url_for('sign_up') }}" method=post>-->
+  <!--  <input type="text" name="username" placeholder="Your username"/>-->
+  <!--  <input type="text" name="email" placeholder="Your email"/>-->
+  <!--  <input type="password" name="password" placeholder="Password"/>-->
+  <!--  <input type="submit" value="Submit"/>-->
+  <!--  <div>{{ error }}</div>-->
+  <!--</form>-->
 </div>
 {% endblock %}

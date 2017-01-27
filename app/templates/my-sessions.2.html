@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!-- See http://www.firepad.io/docs/ for detailed embedding docs. -->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <!-- Bootstrap core CSS -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- CodeMirror and its JavaScript mode file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/python/python.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
+    <link rel="stylesheet" href="http://codemirror.net/theme/monokai.css" />
+    <!-- Firepad -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
+    <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=BioRhyme:200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400" rel="stylesheet">
+    <!-- Custom js and css -->
+    <script src="{{url_for('static', filename='pair-session.js')}}"></script>
+    <script src="{{url_for('static', filename='firepad-userlist.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />
+    <title>Psquair - Session</title>
+</head>
+
+<body onload="init()">
+    <!--header start-->
+    <header class="header">
+        <div class="sidebar-toggle">
+            <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
+        </div>
+        <!--logo start-->
+        <a href="/" class="logo"><b>Psquair</b></a>
+        <!--logo end-->
+        <div class="top-menu">
+            <ul class="nav pull-right">
+                <li><a class="logout" href="{{ url_for('log_out') }}">Logout</a></li>
+            </ul>
+        </div>
+    </header>
+    <!--header end-->
+    <!--sidebar start-->
+    <aside>
+        <div id="sidebar" class="nav-collapse ">
+            <!-- sidebar menu start-->
+            <ul class="sidebar-menu" id="nav-accordion">
+                <div id="current-user">
+                    <div class="div-circle">
+                        <p class="name-initial">@</p>
+                    </div>
+                    <h5 class="centered u-name">Loading...</h5>
+                </div>
+                <div id="other-users">
+                    <div id="firepad-userlist"></div>
+                </div>
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+    <!--main content start-->
+    <section id="main-content">
+        <section class="wrapper">
+            <div class="row">
+                <div class="col-xs-12 main-chart">
+                    <div class="row" id="firepad-container"></div>
+                </div>
+                <!-- /col-lg-9 END SECTION MIDDLE -->
+            </div>
+            <! --/row -->
+        </section>
+    </section>
+    <!--main content end-->
+    <!--sidebar chat-->
+    <aside>
+        <div id="sidebar-chat" class="nav-collapse ">
+            <!-- sidebar chat menu-->
+            <div class="title">Chats</div>
+            <div id="chat-wrapper">
+	            <ul class="sidebar-chat-list" id="nav-accordion">
+	            </ul>
+            </div>
+            <div id='chat-input'>
+	            	<form id="chat-form" onsubmit="return false">
+					   <input type="text" placeholder="Type your message here.." name="chat-message" id="chat-field"/>
+					   <input type="button" visibility="false" id="send-chat-btn" value="Send"/>
+					</form>
+	            </div>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+</body>
+
+</html>

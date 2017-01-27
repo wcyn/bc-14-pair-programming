@@ -12,19 +12,10 @@ import python_jwt as jwt  # Requires: pip install python-jwt
 import Crypto.PublicKey.RSA as RSA  # Requires: pip install pycrypto
 import datetime
 import json
+from config import FIREBASE_CONFIG as fb_config
 
 
-config = {
-	"apiKey": "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
-    "authDomain": "psqair.firebaseapp.com",
-    "databaseURL": "https://psqair.firebaseio.com",
-    "storageBucket": "psqair.appspot.com",
-    "messagingSenderId": "470726324781"
-
-}
-# move to config
-
-firebase = pyrebase.initialize_app(config)
+firebase = pyrebase.initialize_app(fb_config)
 db = firebase.database()
 # auth = firebase.auth()
 auth = firebase.auth()
@@ -125,6 +116,27 @@ def get_user_token():
         print("Something went wrong in get token: ", e)
 
 
+@app.route('/my-sessions')
+def my_sessions(user_id):
+    try:
+        if not session['logged_in']:
+            print("** @session not logged in ")
+            next_url = {'next': request.url}
+            print(next_url)
+            session.pop('cust_token', None)
+            return redirect(url_for('log_in'), next=next)
+        else:
+            user_details = {
+                "localId": session["localId"],
+                "username": session['username']
+            }
+
+    except KeyError as e:
+        print("Key Error: ",e)
+        return redirect(url_for('log_in'))
+    return render_template("my-sessions.html")
+
+
 @app.route('/pair-session/<user_id>')
 def pair_session(user_id):
     try:
@@ -139,8 +151,6 @@ def pair_session(user_id):
                 "localId": session["localId"],
                 "username": session['username']
             }
-            # print("Refreshing token..")
-            # user = auth.refresh(session['refreshToken'])
     except KeyError as e:
         print("Key Error: ",e)
         return redirect(url_for('log_in'))
@@ -179,7 +189,6 @@ def sign_up():
 
 @app.route('/log-in', methods=['GET','POST'])
 def log_in():
-    # with app.app_context():
         try:
             if session['logged_in']:
                 print("\t** Logged in!")
@@ -194,7 +203,6 @@ def log_in():
         # hash string
         next_url = request.args.get('next')
         print("Next URL: ", next_url)
-        # print("Args: ", request.args)
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
@@ -215,7 +223,6 @@ def log_in():
                     return redirect(next_url)
                 return redirect(url_for('pair_session', user_id=user['localId']))
 
-                # print(user)
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid credentials'

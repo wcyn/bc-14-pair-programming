@@ -65,6 +65,7 @@ img {
     float: left;
     padding-right: 15px;
     margin-top: 20px;
+    display: none;
 }
 
 .header .sidebar-toggle .fa-bars {
@@ -72,6 +73,7 @@ img {
     display: inline-block;
     font-size: 20px;
     color: #fff;
+    display: none;
 }
 
 .header a.logo {
