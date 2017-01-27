@@ -52,11 +52,11 @@ function init() {
                     $('#sidebar-chat #chat-input #chat-field').val('');
                 });
                 //// Get Firebase Database reference.
-                var firepadRef = getExampleRef(data['uid']);
+                var user_id = window.location.pathname.split("/").pop()
+                var firepadRef = getExampleRef(user_id);
 
                 // get chats for this session and populate ui
-                // prepopulateChatSpace(getChats(firepadRef.key));
-                updateChatSpace(firepadRef.key);
+                updateChatSpace(user_id, firepadRef.key);
 
                 user_details.uid = data['uid'];
                 var userRef = firebase.database().ref('users/' + data['uid'] + '/username/');
@@ -65,11 +65,8 @@ function init() {
                     userId: data['uid']
                 });
                 userRef.on('value', function(snapshot) {
-                    //   updateStarCount(postElement, snapshot.val());
                     console.log("Snapshot stringified: " +
                     String(snapshot.val()).charAt(0));
-                    //   updateUIElement("aside #sidebar .sidebar-menu #current-user .name-initial"
-                    //   ).text(snapshot.val())
                     var username = String(snapshot.val())
                     var init_char = username.charAt(0)
                     $("#sidebar .sidebar-menu #current-user .name-initial").text(init_char);
@@ -92,89 +89,101 @@ function init() {
 
 // Send chat message to Firebase.
 function sendChat(sessionId, message, userId) {
-    console.log("Chat Sending...");
     // Reference to the /chats/ database path.
     var chatsRef = firebase.database().ref().child('chats').child(sessionId);
-    console.log("Chat Sending after ref");
     var data = {
         message: message,
         userId: userId
     };
-    console.log("Chat Sending starting...");
     chatsRef.push(data);
-    console.log("Chat Sending Finished");
 
 };
 
-// Reteieve all chats once
-function getChats(sessionId) {
+
+// Load chat space with messages
+function loadChatSpace(userId, sessionId) {
     console.log("Getting chats...");
     var chatsRef = firebase.database().ref().child('chats').child(
         sessionId);
+
     chatsRef.once('value', function(snapshot) {
-        console.log("Chat snapshot get all: " + JSON.stringify(snapshot.val()));
-        return snapshot.val();
-    });
-}
-
-function getNewChats(sessionId) {
-    console.log("Getting chats...");
-    var chatsRef = firebase.database().ref().child('chats').child(
-        sessionId);
-    chatsRef.on('child_added', function(snapshot) {
-        console.log("Chat snapshot new chats: " + snapshot.val()['message']);
-        return snapshot.val();
-    });
-}
-
-function prepopulateChatSpace(snapchat_obj) {
-    for (var key in snapchat_obj) {
-        console.log("json loop..");
-      if (snapchat_obj.hasOwnProperty(key)) {
-        console.log(key + " -> " + JSON.stringify(snapchat_obj[key]['message']));
-        updateChatSpace(JSON.stringify(snapchat_obj[key]['message']))
-      } else{
-          console.log("Nothing in json loop..");
-      };
-    }
-}
-
-// Update chat space with messages
-function updateChatSpace(sessionId) {
-    console.log("Getting chats...");
-    var chatsRef = firebase.database().ref().child('chats').child(
-        sessionId);
-    chatsRef.on('child_added', function(snapshot) {
-        console.log("Chat snapshot new chats: " + snapshot.val()['message']);
         var chat_obj = snapshot.val();
-        if (chat_obj) {
-            console.log("Updating chat space..: " + chat_obj);
-            // $('#sidebar-chat .sidebar-chat-list').each(function(){
-            //     $('<li />', {
-            //         class : 'chat-msg',
-            //         text: chat_obj['message'],
-            //         appendTo : this
-            //     });
-            // });
-            $('<li class="chat-content">'
-                + '<div class="div-circle">'
-                + '@'
-                + '</div>'
-                + '<div class="msg-details">'
-                + '<div class="sender-name">'
-                + chat_obj['userId']
-                + '</div>'
-                + '<p class="chat-msg">'
-                + chat_obj['message']
-                + '</p>'
-                + '</div>'
-                + '</li>'
-            ).appendTo('#sidebar-chat .sidebar-chat-list');
-        } else {
-            console.log("NO chat object")
-        }
+        snapshot.forEach(function(childSnapshot) {
+            var childData = childSnapshot.val();
+            console.log("Chat childData: " + JSON.stringify(childData['message']));
+            if (childData) {
+                var sessionChatRef = firebase.database().ref().child('pair_sessions').child(
+                    userId).child(sessionId).child('users').child(
+                    childData['userId']);
+                console.log("Appending from load");
+                $('#sidebar-chat .sidebar-chat-list').empty();
+                sessionChatRef.on("value", function(sessSnapshot){
+                    var username = sessSnapshot.val()['name']
+                    var color = sessSnapshot.val()['color']
+                    console.log("Username: " + username);
+                    $('<li class="chat-content">'
+                        + '<div class="div-circle" style="background-color:'
+                        + color + ';">'
+                        + username.charAt(0)
+                        + '</div>'
+                        + '<div class="msg-details">'
+                        + '<div class="sender-name">'
+                        + username
+                        + '</div>'
+                        + '<p class="chat-msg">'
+                        + childData['message']
+                        + '</p>'
+                        + '</div>'
+                        + '</li>'
+                    ).appendTo('#sidebar-chat .sidebar-chat-list');
+                });
+                } else {
+                console.log("No chat object");
+                }
+          });
     });
 
+}
+
+// Load chat space with messages
+function updateChatSpace(userId, sessionId) {
+    var chatsRef = firebase.database().ref().child('chats').child(
+        sessionId);
+
+    chatsRef.on('child_added', function(snapshot) {
+        var chat_obj = snapshot.val();
+        console.log("Chat sobject: " + JSON.stringify(chat_obj));
+        if (chat_obj) {
+            console.log("Chat childobj: " + JSON.stringify(chat_obj['message']));
+            console.log("Chat object new chats: " + JSON.stringify(chat_obj['message']));
+            var sessionChatRef = firebase.database().ref().child('pair_sessions').child(
+                userId).child(sessionId).child('users').child(
+                chat_obj['userId']);
+
+            sessionChatRef.once("value", function(sessSnapshot){
+                var username = sessSnapshot.val()['name']
+                var color = sessSnapshot.val()['color']
+                console.log("Username: " + username);
+                $('<li class="chat-content">'
+                    + '<div class="div-circle" style="background-color:'
+                    + color + ';">'
+                    + username.charAt(0)
+                    + '</div>'
+                    + '<div class="msg-details">'
+                    + '<div class="sender-name">'
+                    + username
+                    + '</div>'
+                    + '<p class="chat-msg">'
+                    + chat_obj['message']
+                    + '</p>'
+                    + '</div>'
+                    + '</li>'
+                ).appendTo('#sidebar-chat .sidebar-chat-list');
+            });
+            } else {
+            console.log("No chat object");
+            }
+          });
 }
 
 // Helper to get hash from end of URL or generate a random one.

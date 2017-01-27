@@ -235,13 +235,15 @@ aside #sidebar-chat #chat-wrapper .chat-content {
 
 aside #sidebar-chat #chat-wrapper .chat-content .div-circle {
     border-radius: 50%;
-    background-color: #fff;
+    background-color: rgba(26, 19, 31, .90);
     width: 30px;
     height: 30px;
     line-height: 30px;
+    color: #fff;
     float: left;
     margin: 0 auto;
     text-align: center;
+    text-transform: uppercase;
 }
 
 aside #sidebar-chat #chat-wrapper .chat-content .msg-details {

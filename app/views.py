@@ -125,8 +125,8 @@ def get_user_token():
         print("Something went wrong in get token: ", e)
 
 
-@app.route('/pair-session')
-def pair_session():
+@app.route('/pair-session/<user_id>')
+def pair_session(user_id):
     try:
         if not session['logged_in']:
             print("** @session not logged in ")
@@ -135,7 +135,6 @@ def pair_session():
             session.pop('cust_token', None)
             return redirect(url_for('log_in'))
         else:
-
             user_details = {
                 "localId": session["localId"],
                 "username": session['username']
@@ -214,7 +213,7 @@ def log_in():
                 if next_url:
                     next_url = next_url.replace('.','#')
                     return redirect(next_url)
-                return redirect(url_for('pair_session'))
+                return redirect(url_for('pair_session', user_id=user['localId']))
 
                 # print(user)
             except requests.exceptions.HTTPError as e:

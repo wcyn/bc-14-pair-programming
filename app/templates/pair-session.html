@@ -26,12 +26,10 @@
     <link href="https://fonts.googleapis.com/css?family=BioRhyme:200" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400" rel="stylesheet">
     <!-- Custom js and css -->
-    <!--<script src="{{url_for('static', filename='pair-session.js')}}"></script>-->
-    <script src="static/pair-session.js?q=20"></script>
-    <script src="static/firepad-userlist.js?q=20"></script>
-    <!--<link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />-->
-    <link rel="stylesheet" href="static/left-sidebar.css?q=20" type="text/css" />
-    <link rel="stylesheet" href="static/pair-session.css?q=20" type="text/css" />
+    <script src="{{url_for('static', filename='pair-session.js')}}"></script>
+    <script src="{{url_for('static', filename='firepad-userlist.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />
+    <title>Psquair - Session</title>
 </head>
 
 <body onload="init()">
@@ -45,7 +43,7 @@
         <!--logo end-->
         <div class="top-menu">
             <ul class="nav pull-right">
-                <li><a class="logout" href="/sign-in">Logout</a></li>
+                <li><a class="logout" href="{{ url_for('log_out') }}">Logout</a></li>
             </ul>
         </div>
     </header>
