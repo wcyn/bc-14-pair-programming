@@ -110,12 +110,10 @@ function loadChatSpace(userId, sessionId) {
         var chat_obj = snapshot.val();
         snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
-            console.log("Chat childData: " + JSON.stringify(childData['message']));
             if (childData) {
                 var sessionChatRef = firebase.database().ref().child('pair_sessions').child(
                     userId).child(sessionId).child('users').child(
                     childData['userId']);
-                console.log("Appending from load");
                 $('#sidebar-chat .sidebar-chat-list').empty();
                 sessionChatRef.on("value", function(sessSnapshot){
                     var username = sessSnapshot.val()['name']
@@ -152,10 +150,7 @@ function updateChatSpace(userId, sessionId) {
 
     chatsRef.on('child_added', function(snapshot) {
         var chat_obj = snapshot.val();
-        console.log("Chat sobject: " + JSON.stringify(chat_obj));
         if (chat_obj) {
-            console.log("Chat childobj: " + JSON.stringify(chat_obj['message']));
-            console.log("Chat object new chats: " + JSON.stringify(chat_obj['message']));
             var sessionChatRef = firebase.database().ref().child('pair_sessions').child(
                 userId).child(sessionId).child('users').child(
                 chat_obj['userId']);

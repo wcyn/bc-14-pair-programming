@@ -47,7 +47,6 @@ var FirepadUserList = (function() {
 
   FirepadUserList.prototype.makeHeading_ = function() {
     var counterSpan = elt('span', '0');
-    console.log("This ref:" + this.ref_);
     this.firebaseOn_(this.ref_, 'value', function(usersSnapshot) {
       setTextContent(counterSpan, "" + (usersSnapshot.numChildren()-1));
     });
