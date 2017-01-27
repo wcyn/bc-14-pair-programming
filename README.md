@@ -8,14 +8,6 @@ These instructions should help you run the code on your machine.
 ### Prerequisites
 The code is written in Python3.
 
-### Major Libraries Used
-- Flask
-- Firepad
-- Firebase
-- PythonJWT
-- PyCrypto
-
-
 ### Installing
 
 Clone the repository from GitHub:
@@ -38,6 +30,14 @@ Run the Flask application by typing:
 ```
 $ python runserver.py
 ```
+
+### Major Libraries Used
+- (Flask)[http://flask.pocoo.org/] - A microframework for Python based on Werkzeug, Jinja 2 and good intentions.
+- (Firebase)[https://firebase.google.com/] - A mobile and web application platform with tools and infrastructure designed to help developers build high-quality apps. Firebase is made up of complementary features that developers can mix-and-match to fit their needs.
+- (Firepad)[https://firepad.io/] - Open source collaborative code and text editing that runs on JavaScript and Firebase
+- (Python-JWT)[https://github.com/davedoesdev/python-jwt] - Module for generating and verifying JSON Web Tokens.
+- (PyCrypto)[https://pypi.python.org/pypi/pycrypto] - A collection of both secure hash functions (such as SHA256 and RIPEMD160), and various encryption algorithms (AES, DES, RSA, ElGamal, etc.). Written for Python.
+- (Pyrebase)[https://github.com/thisbejim/Pyrebase] - A simple python wrapper for the Firebase API.
 
 
 ## Resources Used
