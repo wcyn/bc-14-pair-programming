@@ -140,20 +140,22 @@ def my_sessions(user_id):
 @app.route('/pair-session/<user_id>')
 def pair_session(user_id):
     try:
+        next_url = request.url
+        login_url = '%s?next=%s' % (url_for('log_in'), next_url)
+        print("Login URL: ", login_url)
         if not session['logged_in']:
             print("** @session not logged in ")
-            next_url = {'next': request.url}
-            print(next_url)
+            print("Next url from pair session: ", next_url)
             session.pop('cust_token', None)
-            return redirect(url_for('log_in'))
+            return redirect(login_url)
         else:
             user_details = {
                 "localId": session["localId"],
                 "username": session['username']
             }
     except KeyError as e:
-        print("Key Error: ",e)
-        return redirect(url_for('log_in'))
+        print("Key Error: ", e)
+        return redirect(login_url)
     return render_template("pair-session.html")
 
 
@@ -176,7 +178,7 @@ def sign_up():
                 session['idToken'] = user['idToken']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
-                return redirect(url_for('pair_session'))
+                return redirect(url_for('pair_session',  user_id=user['localId']))
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid field values'
@@ -192,7 +194,7 @@ def log_in():
         try:
             if session['logged_in']:
                 print("\t** Logged in!")
-                return redirect(url_for('pair_session'))
+                return redirect(url_for('pair_session', user_id=session['localId']))
             else:
                 print("\t** Not Logged in!")
         except KeyError as e:

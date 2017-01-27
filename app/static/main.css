@@ -120,5 +120,5 @@ img {
 }
 
 form #inputPassword {
-    width: 100%;
+    width: 100% !important;
 }

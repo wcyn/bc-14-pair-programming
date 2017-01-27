@@ -3,6 +3,7 @@
 {% block body %}
 <div class="jumbotron">
   <h1>Sign Up</h1>
+  {% if not session.logged_in %}
   <p class="lead">Sign Up to Pair Program!</p>
   <div class="form-cont">
         <form action="{{ url_for('sign_up') }}" method=post data-toggle="validator" role="form">
@@ -33,12 +34,9 @@
           </div>
         </form>
         </div>
-  <!--<form action="{{ url_for('sign_up') }}" method=post>-->
-  <!--  <input type="text" name="username" placeholder="Your username"/>-->
-  <!--  <input type="text" name="email" placeholder="Your email"/>-->
-  <!--  <input type="password" name="password" placeholder="Password"/>-->
-  <!--  <input type="submit" value="Submit"/>-->
-  <!--  <div>{{ error }}</div>-->
-  <!--</form>-->
+        {% else %}
+          <div>You are already Logged in</div>
+          <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
+        {% endif %}
 </div>
 {% endblock %}
