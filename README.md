@@ -1,5 +1,6 @@
-# pair-programming-andela
-An Flask application that facilitates pair programming
+# Psquair - The Pair Programming App of the Century
+An Flask application that facilitates pair programming in conjuction with the
+Firepad JavaScript Library
 
 ## Getting Started
 These instructions should help you run the code on your machine.
@@ -9,6 +10,10 @@ The code is written in Python3.
 
 ### Libraries Used
 - Flask
+- Firepad
+- Firebase
+- PythonJWT
+- PyCrypto
 
 
 ### Installing
@@ -17,17 +22,17 @@ Clone the repository from GitHub:
 ```
 $ git clone https://github.com/wcyn/bc-14-pair-programming
 ```
-
-Install the dependencies from `requirements.txt`
-```
-pip install -r /path/to/requirements.txt
-```
-
-### Running the program
 Change Directory into the project folder
 ```
 $ cd bc-14-pair-programming
 ```
+
+Install the dependencies from `requirements.txt`
+```
+$ pip install -r requirements.txt
+```
+
+### Running the program
 
 Export the run module that flask should use to run:
 ```
