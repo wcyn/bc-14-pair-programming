@@ -1,6 +1,6 @@
 /* global firebase, Firepad, $, CodeMirror, FirepadUserList */
 
-function init() {
+function mySessionsInit() {
     //// Initialize Firebase.
     var config = {
         apiKey: "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",

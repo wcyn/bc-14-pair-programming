@@ -12,21 +12,10 @@ import python_jwt as jwt  # Requires: pip install python-jwt
 import Crypto.PublicKey.RSA as RSA  # Requires: pip install pycrypto
 import datetime
 import json
+from config import FIREBASE_CONFIG as fb_config
 
 
-# env = environ.Env()
-
-config = {
-	"apiKey": "AIzaSyDzBN-pfGvMGR1aIsjTkXEehavEN1TDZMs",
-    "authDomain": "psqair.firebaseapp.com",
-    "databaseURL": "https://psqair.firebaseio.com",
-    "storageBucket": "psqair.appspot.com",
-    "messagingSenderId": "470726324781"
-
-}
-
-
-firebase = pyrebase.initialize_app(config)
+firebase = pyrebase.initialize_app(fb_config)
 db = firebase.database()
 # auth = firebase.auth()
 auth = firebase.auth()
@@ -68,7 +57,6 @@ def load_user():
             session['localId'] = None
     except KeyError as e:
         pass
-        # return redirect(url_for('log_in'))
 
 @app.before_request
 def make_session_permanent():
@@ -101,7 +89,6 @@ def get_user_token():
                 # If token already exists and is verified i.e not expired
                 if user_token:
                     try:
-                        # print("Public Key: ", os.environ['FBASE_PUBLIC_KEY'])
                         # public key is in ssh-rsa format
                         pub_key = RSA.importKey(str(os.environ['FBASE_PUBLIC_KEY']))
                         t_verified = jwt.verify_jwt(str(user_token.val()), pub_key, ['RS256'])
@@ -119,12 +106,9 @@ def get_user_token():
                 return jsonify({"token": cust_token})
             except Exception as e:
                 print("Something went wrong while getting token: ", e)
-                return None
+                cust_token = create_custom_token(session["localId"], False)
+                return jsonify({"token": cust_token})
 
-            # print("Refreshing token..")
-            # user = auth.refresh(session['refreshToken'])
-            # session['cust_token'] = create_custom_token(session["localId"], False)
-            # print("** Cust Token: ", session['cust_token'])
     except KeyError as e:
         print("Key Error while getting token: ", e)
         return None
@@ -132,8 +116,29 @@ def get_user_token():
         print("Something went wrong in get token: ", e)
 
 
-@app.route('/pair-session')
-def pair_session():
+@app.route('/my-sessions')
+def my_sessions(user_id):
+    try:
+        if not session['logged_in']:
+            print("** @session not logged in ")
+            next_url = {'next': request.url}
+            print(next_url)
+            session.pop('cust_token', None)
+            return redirect(url_for('log_in'), next=next)
+        else:
+            user_details = {
+                "localId": session["localId"],
+                "username": session['username']
+            }
+
+    except KeyError as e:
+        print("Key Error: ",e)
+        return redirect(url_for('log_in'))
+    return render_template("my-sessions.html")
+
+
+@app.route('/pair-session/<user_id>')
+def pair_session(user_id):
     try:
         if not session['logged_in']:
             print("** @session not logged in ")
@@ -142,23 +147,18 @@ def pair_session():
             session.pop('cust_token', None)
             return redirect(url_for('log_in'))
         else:
-
             user_details = {
                 "localId": session["localId"],
                 "username": session['username']
             }
-            # print("Refreshing token..")
-            # user = auth.refresh(session['refreshToken'])
     except KeyError as e:
         print("Key Error: ",e)
         return redirect(url_for('log_in'))
-        # pass
     return render_template("pair-session.html")
 
 
 @app.route('/sign-up', methods=['GET','POST'])
 def sign_up():
-    # with app.app_context():
         error = None
         if request.method == 'POST':
             email = request.form['email']
@@ -176,9 +176,7 @@ def sign_up():
                 session['idToken'] = user['idToken']
                 session['refreshToken'] = user['refreshToken']
                 session['logged_in'] = True
-                # flash('You were logged in')
                 return redirect(url_for('pair_session'))
-                # print(user)
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid field values'
@@ -186,13 +184,11 @@ def sign_up():
                 error = "Something went wrong while signing up: " + str(type(e))
                 print(error)
                 print("Error: ", e)
-            # user = auth.sign_in_with_email_and_password(email, password)
 
         return render_template("sign-up.html", error=error)
 
 @app.route('/log-in', methods=['GET','POST'])
 def log_in():
-    # with app.app_context():
         try:
             if session['logged_in']:
                 print("\t** Logged in!")
@@ -207,7 +203,6 @@ def log_in():
         # hash string
         next_url = request.args.get('next')
         print("Next URL: ", next_url)
-        # print("Args: ", request.args)
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
@@ -216,9 +211,6 @@ def log_in():
                 flash('You were logged in')
                 username = db.child("users").child(user['localId']).get(
                     user['idToken']).val().get('username')
-                # g.user['username'] = username
-                # g.user['idToken'] = user['localId']
-                # g.user['logged_in'] = True
                 session['username'] = username
                 session['localId'] = user['localId']
                 session['idToken'] = user['idToken']
@@ -229,16 +221,14 @@ def log_in():
                 if next_url:
                     next_url = next_url.replace('.','#')
                     return redirect(next_url)
-                return redirect(url_for('pair_session'))
+                return redirect(url_for('pair_session', user_id=user['localId']))
 
-                # print(user)
             except requests.exceptions.HTTPError as e:
                 print("HTTP Error: ", e)
                 error = 'Invalid credentials'
             except Exception as e:
                 error = "Something went wrong while logging in: "
                 print(error + str(e))
-            # user = auth.sign_in_with_email_and_password(email, password)
 
         return render_template("log-in.html", error=error)
 
@@ -247,23 +237,18 @@ def log_out():
     with app.app_context():
         error = None
         try:
-            # remove session variables
-            # g.user['username'] = None
-            # g.user['idToken'] = None
-            # g.user['logged_in'] = False
             session.pop('username', None)
             session.pop('localId', None)
             session.pop('idToken', None)
             session.pop('refreshToken', None)
             session['logged_in'] = False
             return redirect(url_for('index'))
-            # print(user)
         except requests.exceptions.HTTPError as e:
             print("HTTP Error: ", e)
             error = 'Could Not Log Out'
         except Exception as e:
             error = "Something went wrong while logging out: "
             print(error + str(e))
-            # user = auth.sign_in_with_email_and_password(email, password)
+            # redirect to login flash error messages utils.flash
 
 

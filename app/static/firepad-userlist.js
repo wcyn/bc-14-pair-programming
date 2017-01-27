@@ -47,6 +47,7 @@ var FirepadUserList = (function() {
 
   FirepadUserList.prototype.makeHeading_ = function() {
     var counterSpan = elt('span', '0');
+    console.log("This ref:" + this.ref_);
     this.firebaseOn_(this.ref_, 'value', function(usersSnapshot) {
       setTextContent(counterSpan, "" + (usersSnapshot.numChildren()-1));
     });
@@ -61,7 +62,6 @@ var FirepadUserList = (function() {
   FirepadUserList.prototype.makeUserEntryForSelf_ = function() {
     var myUserRef = this.ref_.child(this.userId_);
 
-    // var colorDiv = elt('div', null, { 'class': 'firepad-userlist-color-indicator' });
     this.firebaseOn_(myUserRef.child('color'), 'value', function(colorSnapshot) {
       var color = colorSnapshot.val();
       if (isValidColor(color)) {
@@ -69,35 +69,8 @@ var FirepadUserList = (function() {
           "background-color": color,
           "font-weight": "bolder"
         });
-        // colorDiv.style.backgroundColor = color;
       }
     });
-
-    // var nameInput = elt('input', null, { type: 'text', 'class': 'firepad-userlist-name-input'} );
-    // nameInput.value = this.displayName_;
-
-    // var nameHint = elt('div', 'ENTER YOUR NAME', { 'class': 'firepad-userlist-name-hint'} );
-    // if (this.hasName_) nameHint.style.display = 'none';
-
-    // Update Firebase when name changes.
-    var self = this;
-    // on(nameInput, 'change', function(e) {
-    //   var name = nameInput.value || "Guest " + Math.floor(Math.random() * 1000);
-    //   myUserRef.child('name').onDisconnect().remove();
-    //   myUserRef.child('name').set(name);
-    //   nameHint.style.display = 'none';
-    //   nameInput.blur();
-    //   self.displayName_ = name;
-    //   stopEvent(e);
-    // });
-
-    // var nameDiv = elt('div', [nameInput, nameHint]);
-
-    // return elt('div', [ colorDiv
-    // // , nameDiv
-    // ], {
-    //   'class': 'firepad-userlist-user ' + 'firepad-user-' + this.userId_
-    // });
   };
 
   FirepadUserList.prototype.makeUserEntriesForOthers_ = function() {
@@ -121,7 +94,8 @@ var FirepadUserList = (function() {
         color = "#ffb"
       }
 
-      var colorDiv = elt('div', null, { 'class': 'firepad-userlist-color-indicator' });
+      var nameInitialDiv = elt('div', name.charAt(0) || 'G', { 'class': 'name-initial' });
+      var colorDiv = elt('div', [nameInitialDiv], { 'class': 'firepad-userlist-color-indicator' });
       colorDiv.style.backgroundColor = color;
 
       var nameDiv = elt('div', name || 'Guest', { 'class': 'firepad-userlist-name' });

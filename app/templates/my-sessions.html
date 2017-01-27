@@ -1,38 +1,7 @@
-<!DOCTYPE html>
-<!-- See http://www.firepad.io/docs/ for detailed embedding docs. -->
-<html>
-
-<head>
-    <meta charset="utf-8" />
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
-    <!-- Bootstrap core CSS -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Font Awesome -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-    <!-- CodeMirror and its JavaScript mode file -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/javascript/javascript.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/mode/python/python.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
-    <link rel="stylesheet" href="http://codemirror.net/theme/monokai.css" />
-    <!-- Firepad -->
-    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
-    <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=BioRhyme:200" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300i,400" rel="stylesheet">
-    <!-- Custom js and css -->
-    <script src="{{url_for('static', filename='pair-session.js')}}"></script>
-    <script src="{{url_for('static', filename='firepad-userlist.js')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='pair-session.css')}}" type="text/css" />
-    <title>Psquair - Session</title>
-</head>
-
-<body onload="init()">
+{% extends "base.html" %}
+{% block title %}Log In{% endblock %}
+{% block body %}
+<div onload="mySessionsInit()">
     <!--header start-->
     <header class="header">
         <div class="sidebar-toggle">
@@ -99,6 +68,23 @@
         </div>
     </aside>
     <!--sidebar end-->
-</body>
+</div>
 
-</html>
+<div class="jumbotron">
+    <h1>Log In</h1>
+    {% if not session.logged_in %}
+        <p class="lead">Log In to Pair Program!</p>
+        <form action="{{ url_for('log_in') }}" method=post>
+            <input type="text" name="email" placeholder="Your email" />
+            <input type="password" name="password" placeholder="Password" />
+            <input type="submit" value="Submit" />
+            {% if error %}
+                <div>{{ error }}</div>
+            {% endif %}
+        </form>
+    {% else %}
+        <div>You are already Logged in</div>
+        <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
+    {% endif %}
+</div>
+{% endblock %}

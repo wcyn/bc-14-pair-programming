@@ -5,14 +5,30 @@
     <h1>Log In</h1>
     {% if not session.logged_in %}
         <p class="lead">Log In to Pair Program!</p>
-        <form action="{{ url_for('log_in') }}" method=post>
-            <input type="text" name="email" placeholder="Your email" />
-            <input type="password" name="password" placeholder="Password" />
-            <input type="submit" value="Submit" />
-            {% if error %}
+        <div class="form-cont">
+        <form action="{{ url_for('log_in') }}" method=post data-toggle="validator" role="form">
+          <div class="form-group">
+            <label for="inputEmail" class="control-label">Email</label>
+            <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email" data-error="That email address is invalid" required>
+            <div class="help-block with-errors"></div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword" class="control-label">Password</label>
+            <div class="form-inline row">
+              <div class="form-group col-sm-12">
+                <input type="password" name="password" data-minlength="6" class="form-control" id="inputPassword" placeholder="Password" required>
+                <div class="help-block">Minimum of 6 characters</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+          {% if error %}
                 <div>{{ error }}</div>
             {% endif %}
         </form>
+        </div>
     {% else %}
         <div>You are already Logged in</div>
         <li role="presentation"><a href="{{ url_for('log_out') }}">Log Out</a></li>
