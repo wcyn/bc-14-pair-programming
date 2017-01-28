@@ -1,5 +1,5 @@
 # Psquair - The Pair Programming App of the Century
-An Flask application that facilitates pair programming in conjuction with the
+A Flask application that facilitates pair programming in conjuction with the
 Firepad JavaScript Library
 
 The application is hosted on Heroku. You can view the Psquare application at [psquair.herokuapp.com](https://psquair.herokuapp.com)
