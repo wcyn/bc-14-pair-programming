@@ -4,6 +4,11 @@ Firepad JavaScript Library
 
 The application is hosted on Heroku. You can view the Psquare application at [psquair.herokuapp.com](https://psquair.herokuapp.com)
 
+Here's a screenshot:
+
+![alt text](https://i.snag.gy/oYcWMm.jpg "Psquair Screenshot")
+
+
 ## Getting Started
 These instructions should help you run the code on your machine.
 
@@ -75,3 +80,8 @@ ssh-keygen -f my_public_key.pub -i -m PKCS8
 ```
 This will output a public key in the the ssh-rsa format, which you can then
 store as an environment variable
+
+## TO-DO
+- Allow multiple files in one session (that's Tabs)
+- Add Folder Structure for file management
+- Proper URL Redirects 
